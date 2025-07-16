@@ -1,5 +1,7 @@
 #include <cuda_bf16.h>
 
+#include <cstdlib>
+
 #include "kittens.cuh"
 #include "prototype.cuh"
 
@@ -11,11 +13,6 @@ float *to_device(const std::vector<float> &vec) {
   cudaMemcpy(d_ptr, vec.data(), vec.size() * sizeof(float),
              cudaMemcpyHostToDevice);
   return d_ptr;
-}
-
-void gmm_gpu(const float *A, const float *B, float alpha, float beta, int K,
-             int L, int M, float *C) {
-  // TODO
 }
 
 template <int M_BLOCK, int N_BLOCK>
@@ -153,6 +150,67 @@ void inner_run(kittens::bf16 *d_A, kittens::bf16 *d_B, kittens::bf16 *d_C,
   globals G{Ag, Bg, Cg};
   kittens::prototype::lcf::kernel<mmt>
       <<<grid, block, kittens::MAX_SHARED_MEMORY - 1024>>>(G);
+}
+
+void gmm_gpu(const float *A, const float *B, float alpha, float beta, int M,
+             int K, int N, float *C) {
+  // TODO: Tune.
+  using mmt = matmul_template<2, 4, 8>;
+
+  cudaError_t cudaStatus;
+
+  // Allocate device memory
+  __nv_bfloat16 *d_A, *d_B, *d_C;
+  cudaMalloc(&d_A, M * K * sizeof(__nv_bfloat16));
+  cudaMalloc(&d_B, K * N * sizeof(__nv_bfloat16));
+  cudaMalloc(&d_C, M * N * sizeof(__nv_bfloat16));
+
+  // Check for CUDA errors
+  cudaStatus = cudaGetLastError();
+  if (cudaStatus != cudaError::cudaSuccess) {
+    std::cerr << "CUDA error: " << cudaGetErrorString(cudaStatus) << std::endl;
+    std::exit(EXIT_FAILURE);
+  }
+
+  // Convert to __nv_bfloat16 and copy to device
+  __nv_bfloat16 *h_A_bf16 = new __nv_bfloat16[M * K];
+  __nv_bfloat16 *h_B_bf16 = new __nv_bfloat16[K * N];
+  std::transform(A, A + M * K, h_A_bf16,
+                 [](float val) { return __nv_bfloat16(val); });
+  std::transform(B, B + K * N, h_B_bf16,
+                 [](float val) { return __nv_bfloat16(val); });
+  cudaMemcpy(d_A, h_A_bf16, M * K * 2, cudaMemcpyHostToDevice);
+  cudaMemcpy(d_B, h_B_bf16, K * N * 2, cudaMemcpyHostToDevice);
+  cudaDeviceSynchronize();
+  delete[] h_A_bf16;
+  delete[] h_B_bf16;
+
+  unsigned long mem_size = kittens::MAX_SHARED_MEMORY - 1024;
+  cudaFuncSetAttribute(kittens::prototype::lcf::kernel<mmt>,
+                       cudaFuncAttributeMaxDynamicSharedMemorySize, mem_size);
+
+  // Launch kernel
+  dim3 grid(mmt::grid(M, N, K));
+  dim3 block(kittens::prototype::detail::NUM_THREADS_v<mmt>);
+  inner_run<mmt>(d_A, d_B, d_C, M, N, K, grid, block);
+  cudaDeviceSynchronize();
+
+  // Check for CUDA errors
+  cudaStatus = cudaGetLastError();
+  if (cudaStatus != cudaError::cudaSuccess) {
+    std::cerr << "CUDA error: " << cudaGetErrorString(cudaStatus) << std::endl;
+    std::exit(EXIT_FAILURE);
+  }
+
+  // Copy result back to host
+  __nv_bfloat16 *h_C_bf16 = new __nv_bfloat16[M * N];
+  cudaMemcpy(h_C_bf16, d_C, M * N * 2, cudaMemcpyDeviceToHost);
+
+  // Clean up
+  delete[] h_C_bf16;
+  cudaFree(d_A);
+  cudaFree(d_B);
+  cudaFree(d_C);
 }
 
 }  // namespace examples::thunder_kittens
