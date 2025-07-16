@@ -25,6 +25,10 @@ cuda_test(
 cc_binary(
     name = "tk_gmm_benchmark",
     srcs = ["tk_gmm_benchmark.cc"],
+    copts = [
+        "-O3",
+        "-fopenmp",
+    ],
     deps = [":tk_gmm_utils"],
 )
 

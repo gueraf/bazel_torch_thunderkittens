@@ -19,6 +19,7 @@ std::vector<float> make_matrix(int rows, int cols) {
 
 void gmm(const std::vector<float>& A, const std::vector<float>& B, float alpha,
          float beta, int K, int L, int M, std::vector<float>& C) {
+#pragma omp parallel for collapse(2)
   for (int i = 0; i < K; ++i) {
     for (int j = 0; j < M; ++j) {
       float sum = 0.0f;
