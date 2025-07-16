@@ -17,4 +17,5 @@ build --flag_alias=cuda_host_copts=@rules_cuda//cuda:host_copts
 build --flag_alias=cuda_runtime=@rules_cuda//cuda:runtime
 
 build --cuda_copts='-std=c++20'
+build --cuda_copts='-DKITTENS_HOPPER'  # For TK.
 build --cuda_archs=sm_90  # H100
