@@ -3,18 +3,6 @@ load("@rules_cuda//cuda:defs.bzl", "cuda_library", "cuda_test")
 cuda_test(
     name = "build_test",
     srcs = ["build_test.cu"],
-    # copts = [
-    #     "-std=c++20",
-    #     "-Xcompiler",
-    #     # "-Wno-error=maybe-uninitialized",
-    #     # "-Xcompiler=-fPIE",
-    # ],
-    # host_copts = [
-    #     "-std=c++20",
-    #     "-Xcompiler",
-    #     # "-Wno-error=maybe-uninitialized",
-    #     # "-Xcompiler=-fPIE",
-    # ],
     deps = [
         ":tk_gmm",
         "//third_party/thunder_kittens:kittens",
@@ -57,11 +45,5 @@ cuda_library(
     name = "tk_gmm",
     srcs = ["tk_gmm.cu"],
     hdrs = ["tk_gmm.cuh"],
-    # copts = [
-    #     "-O3",
-    #     "-Xcompiler",
-    #     "-fopenmp",
-    # ],
-    deps = [
-    ],
+    deps = ["//third_party/thunder_kittens:kittens"],
 )
