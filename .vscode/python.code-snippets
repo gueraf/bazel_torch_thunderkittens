@@ -1,0 +1,34 @@
+{
+    "main": {
+        "prefix": "main",
+        "body": [
+            "from absl import app, flags",
+            "",
+            "flags.DEFINE_boolean(\"foo\", False, \"Whether to foo.\")",
+            "",
+            "FLAGS = flags.FLAGS",
+            "",
+            "def main(argv):",
+            "\tdel argv  # Unused.",
+            "\tpass",
+            "",
+            "if __name__ == '__main__':",
+            "\tapp.run(main)"
+        ],
+        "description": "Main function"
+    },
+    "test": {
+        "prefix": "test",
+        "body": [
+            "from absl.testing import absltest",
+            "",
+            "class FooTest(absltest.TestCase):",
+            "\tdef test_example(self):",
+            "\t\tpass",
+            "",
+            "if __name__ == '__main__':",
+            "\tabsltest.main()"
+        ],
+        "description": "Test"
+    }
+}

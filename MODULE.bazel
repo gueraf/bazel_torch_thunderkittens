@@ -1,0 +1,38 @@
+module(
+    name = "template_py",
+    repo_name = "template_py",
+)
+
+# Registry: https://registry.bazel.build/
+bazel_dep(name = "rules_python", version = "1.5.1")
+bazel_dep(name = "rules_python_gazelle_plugin", version = "1.5.1")
+bazel_dep(name = "gazelle", version = "0.44.0")
+bazel_dep(name = "rules_uv", version = "0.81.0")
+bazel_dep(name = "aspect_bazel_lib", version = "2.19.4")
+bazel_dep(name = "aspect_rules_py", version = "1.6.0")
+
+python = use_extension("@rules_python//python/extensions:python.bzl", "python")
+python.toolchain(
+    is_default = True,
+    python_version = "3.13.2",
+)
+use_repo(python, "python_versions")
+
+register_toolchains("@python_versions//:all")
+
+use_repo(
+    python,
+    python_3_13 = "python_3_13_2",
+)
+
+pip = use_extension("@rules_python//python/extensions:pip.bzl", "pip")
+pip.parse(
+    download_only = True,
+    experimental_requirement_cycles = {
+    },
+    hub_name = "pip",
+    # We need to use the same version here as in the `python.toolchain` call.
+    python_version = "3.13.2",
+    requirements_lock = "//:requirements_lock.txt",
+)
+use_repo(pip, "pip")

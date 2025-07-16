@@ -1,0 +1,7 @@
+test --test_output=streamed
+
+common --enable_bzlmod
+common --nolegacy_important_outputs
+
+# Try to prevent sandbox escape (https://github.com/bazelbuild/rules_python/issues/1059)
+build --action_env=PYTHONNOUSERSITE=1

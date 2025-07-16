@@ -1,0 +1,5 @@
+python_platform = "linux"
+python_version = "3.13.2"
+
+project_excludes = ["bazel-**"]
+search_path = ["bazel-template_py/external/rules_python++pip+pip_313_absl_py/site-packages/"]

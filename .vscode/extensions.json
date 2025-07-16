@@ -1,0 +1,11 @@
+{
+    "recommendations": [
+        "bazelbuild.vscode-bazel",
+        "ms-python.black-formatter",
+        "ms-python.python",
+        "github.copilot",
+        "ms-python.isort",
+        "charliermarsh.ruff",
+        "meta.pyrefly"
+    ]
+}
