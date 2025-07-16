@@ -1,4 +1,4 @@
-load("@rules_cuda//cuda:defs.bzl", "cuda_library", "cuda_test")
+load("@rules_cuda//cuda:defs.bzl", "cuda_binary", "cuda_library", "cuda_test")
 
 cuda_test(
     name = "build_test",
@@ -10,14 +10,35 @@ cuda_test(
     ],
 )
 
-cc_binary(
+cuda_binary(
     name = "tk_gmm_benchmark",
     srcs = ["tk_gmm_benchmark.cc"],
     copts = [
-        "-O3",
-        "-fopenmp",
+        "-DNDEBUG",
+        # "-fPIE",
+        # "-fopenmp",
+        # "-Wno-psabi",
+        # "-fno-strict-aliasing",
+        "-std=c++20",
+        "-DKITTENS_HOPPER",
+        "--expt-extended-lambda",
+        "--expt-relaxed-constexpr",
+        "--use_fast_math",
     ],
-    deps = [":tk_gmm_utils"],
+    linkopts = [
+        "-lcuda",
+        # "-lcudadevrt",
+        # "-lcudart_static",
+        # "-lcublas",
+        "-lgomp",
+        "-lrt",
+        "-lpthread",
+        "-ldl",
+    ],
+    deps = [
+        ":tk_gmm",
+        ":tk_gmm_utils",
+    ],
 )
 
 cc_library(
