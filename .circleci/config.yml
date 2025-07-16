@@ -8,17 +8,17 @@ orbs:
 jobs:
   setup:
     docker:
-      - image: cimg/node:current
+      - image: gueraf/cuda_bazel:latest
+        auth:
+          username: $DOCKER_USERNAME
+          password: $DOCKER_ACCESS_TOKEN
     steps:
       - checkout
       - run:
-          name: "Install Bazelisk"
-          command: "sudo npm install -g @bazel/bazelisk"
-      - run:
           name: "Generate config"
           command: |
-            # Get all Python test targets, excluding requirements_test
-            TEST_TARGETS=$(bazelisk query 'kind("py_test", //...)' | grep -vE ":requirements_test")
+            # Get all test targets (Python, C++, and CUDA), excluding requirements_test
+            TEST_TARGETS=$(bazelisk query 'kind("py_test|cc_test|cuda_test", //...)' | grep -vE ":requirements_test")
 
             # Start generating the new config
             echo "version: 2.1" > generated_config.yml
