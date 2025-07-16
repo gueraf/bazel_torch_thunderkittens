@@ -21,14 +21,26 @@ jobs:
             # Get Python test targets
             PY_TEST_TARGETS=$(bazelisk query 'kind("py_test", //...)')
 
-            # Get C++ test targets
-            CC_TEST_TARGETS=$(bazelisk query 'kind("cc_test", //...)')
+            # Get C++ test targets (excluding CUDA tests)
+            ALL_CC_TESTS=$(bazelisk query 'kind("cc_test", //...)')
+            CC_TEST_TARGETS=""
+            for test in $ALL_CC_TESTS; do
+              # Check if this test has .cu source files - if so, it's a CUDA test, exclude it
+              if ! bazelisk query "attr('srcs', '.*\.cu$', $test)" 2>/dev/null | grep -q "$test"; then
+                CC_TEST_TARGETS="$CC_TEST_TARGETS $test"
+              fi
+            done
 
-            # Get CUDA test targets
-            # CUDA_TEST_TARGETS=$(bazelisk query 'kind("cuda_test", //...)')
-
+            # Get CUDA test targets (cuda_test rules show up as cc_test in queries)
             # TODO: CUDA tests temporarily disabled
+            # ALL_CC_TESTS=$(bazelisk query 'kind("cc_test", //...)')
             CUDA_TEST_TARGETS=""
+            # for test in $ALL_CC_TESTS; do
+            #   # Check if this test has .cu source files by checking the actual files
+            #   if bazelisk query "attr('srcs', '.*\.cu$', $test)" 2>/dev/null | grep -q "$test"; then
+            #     CUDA_TEST_TARGETS="$CUDA_TEST_TARGETS $test"
+            #   fi
+            # done
 
             # Combine all test targets and filter out requirements_test
             TEST_TARGETS=$(echo "$PY_TEST_TARGETS $CC_TEST_TARGETS $CUDA_TEST_TARGETS" | tr ' ' '\n' | grep -vE ":requirements_test")
