@@ -3,6 +3,6 @@
 #include <iostream>
 
 #include "kittens.cuh"
-// #include "prototype.cuh"
+#include "prototype.cuh"
 
 TEST(DummyTest, AlwaysPasses) { std::cout << "Great success" << std::endl; }
