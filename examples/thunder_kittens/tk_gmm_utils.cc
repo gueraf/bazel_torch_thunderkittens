@@ -17,4 +17,17 @@ std::vector<float> make_matrix(int rows, int cols) {
   return matrix;
 }
 
+void gmm(const std::vector<float>& A, const std::vector<float>& B, float alpha,
+         float beta, int K, int L, int M, std::vector<float>& C) {
+  for (int i = 0; i < K; ++i) {
+    for (int j = 0; j < M; ++j) {
+      float sum = 0.0f;
+      for (int k = 0; k < L; ++k) {
+        sum += A[i * L + k] * B[k * M + j];
+      }
+      C[i * M + j] = alpha * sum + beta * C[i * M + j];
+    }
+  }
+}
+
 }  // namespace examples::thunder_kittens
