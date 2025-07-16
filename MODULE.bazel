@@ -23,6 +23,9 @@ cuda.local_toolchain(
     toolkit_path = "",  # Set to empty string to use the default CUDA toolkit path
 )
 
+thunder_kittens = use_extension("//third_party/thunder_kittens:extension.bzl", "thunder_kittens_extension")
+use_repo(thunder_kittens, "com_github_hazyresearch_thunderkittens")
+
 # Python
 python = use_extension("@rules_python//python/extensions:python.bzl", "python")
 python.toolchain(
