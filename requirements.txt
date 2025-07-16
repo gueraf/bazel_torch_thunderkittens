@@ -1,0 +1,6 @@
+absl-py>=2.2.2
+
+# Note: Comment out to get pytorch with cuda.
+--extra-index-url https://download.pytorch.org/whl/cpu
+torch[opt-einsum]>=2.7.0
+numpy  # Leave open for compatibility with torch-cpu

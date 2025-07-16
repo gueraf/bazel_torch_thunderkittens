@@ -1,0 +1,13 @@
+PIPY_PKGS = ['@pip//absl_py:pkg',
+'@pip//filelock:pkg',
+'@pip//fsspec:pkg',
+'@pip//jinja2:pkg',
+'@pip//markupsafe:pkg',
+'@pip//mpmath:pkg',
+'@pip//networkx:pkg',
+'@pip//numpy:pkg',
+'@pip//opt_einsum:pkg',
+'@pip//setuptools:pkg',
+'@pip//sympy:pkg',
+'@pip//torch:pkg',
+'@pip//typing_extensions:pkg']

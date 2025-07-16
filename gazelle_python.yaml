@@ -1,0 +1,28 @@
+# GENERATED FILE - DO NOT EDIT!
+#
+# To update this file, run:
+#   bazel run //:gazelle_python_manifest.update
+
+---
+manifest:
+  modules_mapping:
+    absl: absl_py
+    filelock: filelock
+    fsspec: fsspec
+    functorch: torch
+    isympy: sympy
+    jinja2: Jinja2
+    markupsafe: MarkupSafe
+    mpmath: mpmath
+    networkx: networkx
+    numpy: numpy
+    opt_einsum: opt_einsum
+    pkg_resources: setuptools
+    setuptools: setuptools
+    sympy: sympy
+    torch: torch
+    torchgen: torch
+    typing_extensions: typing_extensions
+  pip_repository:
+    name: pip
+integrity: 36c5527de091795ff76f039c36dd85998db583b904253d1d010398290a54b2ad
