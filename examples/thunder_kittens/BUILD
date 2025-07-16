@@ -4,7 +4,6 @@ cuda_test(
     name = "build_test",
     srcs = ["build_test.cu"],
     deps = [
-        ":tk_gmm",
         "//third_party/thunder_kittens:kittens",
         "@googletest//:gtest",
         "@googletest//:gtest_main",
@@ -46,4 +45,14 @@ cuda_library(
     srcs = ["tk_gmm.cu"],
     hdrs = ["tk_gmm.cuh"],
     deps = ["//third_party/thunder_kittens:kittens"],
+)
+
+cuda_test(
+    name = "tk_gmm_test",
+    srcs = ["tk_gmm_test.cu"],
+    deps = [
+        ":tk_gmm",
+        "@googletest//:gtest",
+        "@googletest//:gtest_main",
+    ],
 )

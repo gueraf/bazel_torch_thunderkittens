@@ -14,8 +14,8 @@ package(default_visibility = ["//visibility:public"])
 
 cuda_library(
     name = "kittens",
-    hdrs = glob(["include/**/*.cuh"]),
-    includes = ["include"],
+    hdrs = glob(["include/**/*.cuh", "prototype/**/*.cuh"]),
+    includes = ["include", "prototype"],
     # copts = [
     #     "-std=c++20",
     #     "-Xcompiler",
