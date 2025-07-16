@@ -31,6 +31,8 @@
         "*.bzl": "python",
         "*.ipp": "cpp",
         "*.tcc": "cpp",
+        "*.cu": "cpp",
+        "*.cuh": "cpp",
         "__locale": "cpp",
         "__nullptr": "cpp",
         "__string": "cpp",
