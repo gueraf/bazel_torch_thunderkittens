@@ -38,7 +38,7 @@ jobs:
             done
 
             # Combine all test targets and filter out requirements_test
-            TEST_TARGETS=$(echo "$PY_TEST_TARGETS $CC_TEST_TARGETS | tr ' ' '\n' | grep -vE ":requirements_test")
+            TEST_TARGETS=$(echo "$PY_TEST_TARGETS $CC_TEST_TARGETS" | tr ' ' '\n' | grep -vE ":requirements_test")
 
             # Start generating the new config
             echo "version: 2.1" > generated_config.yml
