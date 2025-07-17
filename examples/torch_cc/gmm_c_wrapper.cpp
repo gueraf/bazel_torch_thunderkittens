@@ -13,7 +13,6 @@ void gmm_c_wrapper(const float* A, const float* B, float alpha, float beta,
   std::vector<float> C_vec(C, C + K * M);
 
   // Call the original GMM function
-  // TODO: Vector -> array -> vector is supid, but ok for the demo...
   examples::thunder_kittens::gmm(A_vec, B_vec, alpha, beta, K, L, M, C_vec);
 
   // Copy result back to output array
