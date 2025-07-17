@@ -1,30 +1,48 @@
 load("@aspect_rules_py//py:defs.bzl", "py_library", "py_test")
 load("@rules_cc//cc:defs.bzl", "cc_library")
 
+# TODO: Remove?
 # C wrapper for the GMM function
-cc_library(
-    name = "gmm_c_wrapper",
+# cc_library(
+#     name = "gmm_c_wrapper",
+#     srcs = ["gmm_c_wrapper.cpp"],
+#     copts = [
+#         "-std=c++17",
+#         "-fPIC",
+#     ],
+#     visibility = ["//visibility:public"],
+#     deps = [
+#         "//examples/thunder_kittens:tk_gmm_utils",
+#     ],
+#     alwayslink = True,  # Force linking of all symbols
+# )
+
+# TODO: This should be a cc_library...
+# Shared library for the GMM function
+cc_binary(
+    name = "libgmm_shared_lib.so",
     srcs = ["gmm_c_wrapper.cpp"],
     copts = [
         "-std=c++17",
         "-fPIC",
     ],
-    visibility = ["//visibility:public"],
+    linkopts = ["-shared"],
+    linkshared = True,
     deps = [
         "//examples/thunder_kittens:tk_gmm_utils",
     ],
-    alwayslink = True,  # Force linking of all symbols
 )
 
 # Python library wrapping the GMM function
 py_library(
     name = "gmm_torch",
     srcs = ["gmm_torch.py"],
-    data = [":gmm_c_wrapper"],
+    data = [":libgmm_shared_lib.so"],
     visibility = ["//visibility:public"],
     deps = [
         "@pip//numpy",
         "@pip//torch",
+        "@rules_python//python/runfiles",
     ],
 )
 

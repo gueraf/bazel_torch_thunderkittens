@@ -8,6 +8,7 @@ from typing import Optional
 
 import numpy as np
 import torch
+from python.runfiles import Runfiles
 
 
 class GMMWrapper:
@@ -46,28 +47,20 @@ class GMMWrapper:
         self.lib.gmm_c_wrapper.restype = None
 
     def _find_library(self) -> str:
-        """Find the shared library automatically."""
-        # For Bazel builds, the library is in the bazel-bin directory
-        # TODO: Clean up this mess.
-        possible_paths = [
-            "/home/fabian/Desktop/bazel_torch_thunderkittens/bazel-bin/examples/torch_cc/libgmm_shared_lib.so",
-            "./bazel-bin/examples/torch_cc/libgmm_shared_lib.so",
-            "../bazel-bin/examples/torch_cc/libgmm_shared_lib.so",
-            "/home/fabian/Desktop/bazel_torch_thunderkittens/bazel-bin/examples/torch_cc/libgmm_c_wrapper.so",
-            "./bazel-bin/examples/torch_cc/libgmm_c_wrapper.so",
-            "../bazel-bin/examples/torch_cc/libgmm_c_wrapper.so",
-            "./libgmm_wrapper.so",
-            "../thunder_kittens/libgmm_wrapper.so",
-            "/usr/local/lib/libgmm_wrapper.so",
-        ]
+        """Find the shared library automatically using Bazel runfiles."""
+        r = Runfiles.Create()
+        # TODO: Why is _main needed here? Likely related to the cc_binary hack.
+        lib_path = r.Rlocation("_main/examples/torch_cc/libgmm_shared_lib.so")
+        if not lib_path:
+            raise FileNotFoundError("Could not locate GMM shared library via runfiles")
 
-        for path in possible_paths:
-            if os.path.exists(path):
-                if self.print_debug:
-                    print(f"Found GMM shared library at: {path}")
-                return path
+        if not os.path.exists(lib_path):
+            raise FileNotFoundError(f"GMM shared library not found at runfiles path: {lib_path}")
 
-        raise FileNotFoundError("Could not find GMM shared library")
+        if self.print_debug:
+            print(f"Found GMM shared library via runfiles at: {lib_path}")
+
+        return lib_path
 
     def gmm_torch(
         self,
