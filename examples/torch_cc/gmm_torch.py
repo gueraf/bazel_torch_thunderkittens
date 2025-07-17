@@ -13,7 +13,7 @@ import torch
 class GMMWrapper:
     """Wrapper class for the GMM function that integrates with PyTorch."""
 
-    def __init__(self, lib_path: Optional[str] = None):
+    def __init__(self, lib_path: Optional[str] = None, print_debug: bool = False):
         """
         Initialize the GMM wrapper.
 
@@ -21,6 +21,8 @@ class GMMWrapper:
             lib_path: Path to the shared library containing the GMM function.
                      If None, will try to find it automatically.
         """
+        self.print_debug = print_debug
+
         if lib_path is None:
             # Try to find the library automatically
             lib_path = self._find_library()
@@ -61,6 +63,8 @@ class GMMWrapper:
 
         for path in possible_paths:
             if os.path.exists(path):
+                if self.print_debug:
+                    print(f"Found GMM shared library at: {path}")
                 return path
 
         raise FileNotFoundError("Could not find GMM shared library")
@@ -127,11 +131,11 @@ class GMMWrapper:
 _gmm_wrapper = None
 
 
-def get_gmm_wrapper() -> GMMWrapper:
+def get_gmm_wrapper(print_debug: bool = False) -> GMMWrapper:
     """Get the global GMM wrapper instance."""
     global _gmm_wrapper
     if _gmm_wrapper is None:
-        _gmm_wrapper = GMMWrapper()
+        _gmm_wrapper = GMMWrapper(print_debug=print_debug)
     return _gmm_wrapper
 
 
@@ -141,6 +145,7 @@ def gmm_torch(
     alpha: float = 1.0,
     beta: float = 0.0,
     C: Optional[torch.Tensor] = None,
+    print_debug: bool = False,
 ) -> torch.Tensor:
     """
     PyTorch-friendly GMM function.
@@ -155,7 +160,7 @@ def gmm_torch(
     Returns:
         Result tensor of shape (K, M)
     """
-    wrapper = get_gmm_wrapper()
+    wrapper = get_gmm_wrapper(print_debug=print_debug)
     return wrapper.gmm_torch(A, B, alpha, beta, C)
 
 

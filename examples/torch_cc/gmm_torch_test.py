@@ -17,7 +17,7 @@ class GMMTorchTest(absltest.TestCase):
         alpha, beta = 2.0, 0.5
 
         # Test with zero C matrix
-        result_cpp = gmm_torch(A, B, alpha, beta)
+        result_cpp = gmm_torch(A, B, alpha, beta, print_debug=True)
 
     def disabled_test_gmm_basic(self):
         """Test basic GMM functionality comparing C++ implementation to pure PyTorch."""
