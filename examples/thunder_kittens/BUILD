@@ -45,6 +45,7 @@ cc_library(
     name = "tk_gmm_utils",
     srcs = ["tk_gmm_utils.cc"],
     hdrs = ["tk_gmm_utils.h"],
+    visibility = ["//examples/torch_cc:__subpackages__"],
     deps = [
         "@abseil-cpp//absl/algorithm:container",
     ],
