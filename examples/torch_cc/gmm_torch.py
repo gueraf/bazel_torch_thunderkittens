@@ -45,9 +45,15 @@ class GMMWrapper:
 
     def _find_library(self) -> str:
         """Find the shared library automatically."""
-        # This would need to be implemented based on your build system
-        # For now, assume it's in a standard location
+        # For Bazel builds, the library is in the bazel-bin directory
+        # TODO: Clean up this mess.
         possible_paths = [
+            "/home/fabian/Desktop/bazel_torch_thunderkittens/bazel-bin/examples/torch_cc/libgmm_shared_lib.so",
+            "./bazel-bin/examples/torch_cc/libgmm_shared_lib.so",
+            "../bazel-bin/examples/torch_cc/libgmm_shared_lib.so",
+            "/home/fabian/Desktop/bazel_torch_thunderkittens/bazel-bin/examples/torch_cc/libgmm_c_wrapper.so",
+            "./bazel-bin/examples/torch_cc/libgmm_c_wrapper.so",
+            "../bazel-bin/examples/torch_cc/libgmm_c_wrapper.so",
             "./libgmm_wrapper.so",
             "../thunder_kittens/libgmm_wrapper.so",
             "/usr/local/lib/libgmm_wrapper.so",
