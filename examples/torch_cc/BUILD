@@ -1,5 +1,5 @@
 load("@aspect_rules_py//py:defs.bzl", "py_library", "py_test")
-load("@rules_cc//cc:defs.bzl", "cc_binary", "cc_library")
+load("@rules_cc//cc:defs.bzl", "cc_library")
 
 # C wrapper for the GMM function
 cc_library(
@@ -16,18 +16,11 @@ cc_library(
     alwayslink = True,  # Force linking of all symbols
 )
 
-# Shared library binary that includes all dependencies
-cc_binary(
-    name = "gmm_shared_lib",
-    linkshared = True,
-    deps = [":gmm_c_wrapper"],
-)
-
 # Python library wrapping the GMM function
 py_library(
     name = "gmm_torch",
     srcs = ["gmm_torch.py"],
-    data = [":gmm_shared_lib"],
+    data = [":gmm_c_wrapper"],
     visibility = ["//visibility:public"],
     deps = [
         "@pip//numpy",
