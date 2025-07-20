@@ -1,0 +1,12 @@
+# Use ROCm base image without PyTorch
+FROM rocm/dev-ubuntu-24.04:6.4.1-complete
+
+# Install CUDA toolkit alongside ROCm, npm, and bazelisk
+RUN wget https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2404/x86_64/cuda-keyring_1.1-1_all.deb && \
+    dpkg -i cuda-keyring_1.1-1_all.deb && \
+    apt update && \
+    apt install -y cuda-toolkit-12-6 npm wget gnupg && \
+    npm install -g @bazel/bazelisk && \
+    rm cuda-keyring_1.1-1_all.deb && \
+    apt clean && \
+    rm -rf /var/lib/apt/lists/*
