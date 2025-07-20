@@ -2,7 +2,9 @@
 #include <cuda_runtime.h>
 #include <dlfcn.h>
 
+#include <filesystem>
 #include <iostream>
+#include <memory>
 #include <string>
 
 void check_loaded_libraries() {
@@ -10,26 +12,56 @@ void check_loaded_libraries() {
 
   // Check if we can get info about the loaded CUDA library
   void* handle = dlopen(nullptr, RTLD_LAZY);
-  if (handle) {
-    // Look for CUDA runtime symbols to see which library provides them
-    void* symbol = dlsym(handle, "cudaGetDeviceCount");
-    if (symbol) {
-      Dl_info info;
-      if (dladdr(symbol, &info)) {
-        std::cout << "cudaGetDeviceCount symbol loaded from: " << info.dli_fname
-                  << std::endl;
+  if (!handle) {
+    std::cout << "Failed to open handle to current process" << std::endl;
+    return;
+  }
 
-        // Check if the path contains "zluda"
-        std::string lib_path(info.dli_fname);
-        if (lib_path.find("zluda") != std::string::npos ||
-            lib_path.find("libcuda.so") != std::string::npos) {
-          std::cout << "✅ ZLUDA library detected!" << std::endl;
-        } else {
-          std::cout << "⚠️  System CUDA library detected" << std::endl;
-        }
-      }
-    }
-    dlclose(handle);
+  // RAII wrapper for dlclose
+  auto handle_guard =
+      std::unique_ptr<void, decltype(&dlclose)>(handle, dlclose);
+
+  // Look for CUDA runtime symbols to see which library provides them
+  void* symbol = dlsym(handle, "cudaGetDeviceCount");
+  if (!symbol) {
+    std::cout << "cudaGetDeviceCount symbol not found" << std::endl;
+    return;
+  }
+
+  Dl_info info;
+  if (!dladdr(symbol, &info)) {
+    std::cout << "Failed to get symbol information" << std::endl;
+    return;
+  }
+
+  std::cout << "cudaGetDeviceCount symbol loaded from: " << info.dli_fname
+            << std::endl;
+
+  // Resolve symlinks to get the absolute path using std::filesystem
+  std::filesystem::path lib_path(info.dli_fname);
+  std::error_code ec;
+  std::filesystem::path real_path =
+      std::filesystem::weakly_canonical(lib_path, ec);
+
+  const char* resolved_fname = nullptr;
+  std::string real_path_str;
+
+  if (!ec) {
+    real_path_str = real_path.string();
+    resolved_fname = real_path_str.c_str();
+    std::cout << "Resolved absolute path: " << resolved_fname << std::endl;
+  } else {
+    std::cout << "Failed to resolve path: " << ec.message() << std::endl;
+    resolved_fname = info.dli_fname;  // fallback to original
+  }
+
+  // Check if the resolved path contains "zluda"
+  std::string path_str(resolved_fname);
+  if (path_str.find("zluda") != std::string::npos ||
+      path_str.find("libcuda.so") != std::string::npos) {
+    std::cout << "✅ ZLUDA library detected!" << std::endl;
+  } else {
+    std::cout << "⚠️  System CUDA library detected" << std::endl;
   }
 }
 
