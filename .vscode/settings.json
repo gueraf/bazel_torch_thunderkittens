@@ -29,10 +29,10 @@
     "editor.formatOnSave": true,
     "files.associations": {
         "*.bzl": "python",
-        "*.ipp": "cpp",
-        "*.tcc": "cpp",
         "*.cu": "cpp",
         "*.cuh": "cpp",
+        "*.ipp": "cpp",
+        "*.tcc": "cpp",
         "__locale": "cpp",
         "__nullptr": "cpp",
         "__string": "cpp",
