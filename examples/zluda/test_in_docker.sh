@@ -3,9 +3,8 @@
 # Test ZLUDA integration in a ROCm-enabled Docker container
 echo "Testing ZLUDA integration with configurable backends..."
 
-docker run rocm/pytorch:rocm6.4.1_ubuntu24.04_py3.12_pytorch_release_2.7.1 \
-    bash -c "apt update && apt install -y npm && npm install -g @bazel/bazelisk && \
-             cd /tmp && \
+docker run gueraf/rocm_cuda:latest \
+    bash -c "cd /tmp && \
              git clone https://github.com/gueraf/bazel_torch_thunderkittens.git && \
              cd bazel_torch_thunderkittens && \
              echo '=== Testing ZLUDA-only target ===' && \
