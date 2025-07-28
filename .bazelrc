@@ -17,6 +17,7 @@ build --flag_alias=cuda_host_copts=@rules_cuda//cuda:host_copts
 build --flag_alias=cuda_runtime=@rules_cuda//cuda:runtime
 
 build --cuda_copts='-std=c++20'
-build --cuda_archs=sm_90a,sm_90  # H100 and 4090
+# build --cuda_archs=sm_90a,sm_89  # H100 and 4090
+build --cuda_archs=sm_90a  # H100 and 4090
 build --cuda_copts='-DKITTENS_HOPPER'  # For TK + H100
 # build --cuda_copts='-DKITTENS_4090'  # For TK + 4090
