@@ -11,16 +11,15 @@ cuda_test_h100(
     ],
 )
 
-# TODO: Make work.
-# cuda_test_4090(
-#     name = "build_test_4090",
-#     srcs = ["build_test.cu"],
-#     deps = [
-#         "//third_party/thunder_kittens:kittens_4090",
-#         "@googletest//:gtest",
-#         "@googletest//:gtest_main",
-#     ],
-# )
+cuda_test_4090(
+    name = "build_test_4090",
+    srcs = ["build_test.cu"],
+    deps = [
+        "//third_party/thunder_kittens:kittens_4090",
+        "@googletest//:gtest",
+        "@googletest//:gtest_main",
+    ],
+)
 
 cuda_binary_h100(
     name = "tk_gmm_benchmark",
