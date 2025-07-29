@@ -1,15 +1,26 @@
-load("@rules_cc//cc:cc_test.bzl", "cc_library", "cc_test")
-load("//bazel:cuda_arch_rules.bzl", "cuda_binary_h100", "cuda_library_h100", "cuda_test_h100")
+load("@cuda_arch_rules//:cuda_arch_rules.bzl", "cuda_binary_h100", "cuda_library_h100", "cuda_test_4090", "cuda_test_h100")
+load("@rules_cc//cc:defs.bzl", "cc_library", "cc_test")
 
 cuda_test_h100(
-    name = "build_test",
+    name = "build_test_h100",
     srcs = ["build_test.cu"],
     deps = [
-        "//third_party/thunder_kittens:kittens",
+        "//third_party/thunder_kittens:kittens_h100",
         "@googletest//:gtest",
         "@googletest//:gtest_main",
     ],
 )
+
+# TODO: Make work.
+# cuda_test_4090(
+#     name = "build_test_4090",
+#     srcs = ["build_test.cu"],
+#     deps = [
+#         "//third_party/thunder_kittens:kittens_4090",
+#         "@googletest//:gtest",
+#         "@googletest//:gtest_main",
+#     ],
+# )
 
 cuda_binary_h100(
     name = "tk_gmm_benchmark",
@@ -21,7 +32,7 @@ cuda_binary_h100(
         # "-Wno-psabi",
         # "-fno-strict-aliasing",
         "-std=c++20",
-        "-DKITTENS_HOPPER",
+        # "-DKITTENS_HOPPER",
         "--expt-extended-lambda",
         "--expt-relaxed-constexpr",
         "--use_fast_math",
@@ -71,7 +82,7 @@ cuda_library_h100(
     name = "tk_gmm",
     srcs = ["tk_gmm.cu"],
     hdrs = ["tk_gmm.cuh"],
-    deps = ["//third_party/thunder_kittens:kittens"],
+    deps = ["//third_party/thunder_kittens:kittens_h100"],
 )
 
 cuda_test_h100(

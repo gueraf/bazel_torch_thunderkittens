@@ -3,7 +3,13 @@
 package(default_visibility = ["//visibility:public"])
 
 alias(
-    name = "kittens",
-    actual = "@com_github_hazyresearch_thunderkittens//:kittens",
+    name = "kittens_h100",
+    actual = "@com_github_hazyresearch_thunderkittens//:kittens_h100",
+    visibility = ["//visibility:public"],
+)
+
+alias(
+    name = "kittens_4090",
+    actual = "@com_github_hazyresearch_thunderkittens//:kittens_4090",
     visibility = ["//visibility:public"],
 )

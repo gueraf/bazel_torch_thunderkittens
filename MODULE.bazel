@@ -26,9 +26,9 @@ cuda.local_toolchain(
 thunder_kittens = use_extension("//third_party/thunder_kittens:extension.bzl", "thunder_kittens_extension")
 use_repo(thunder_kittens, "com_github_hazyresearch_thunderkittens")
 
-# ZLUDA
-zluda = use_extension("//third_party/zluda:extension.bzl", "zluda_extension")
-use_repo(zluda, "zluda")
+# CUDA Architecture Rules
+cuda_arch_rules = use_extension("//bazel:extension.bzl", "cuda_arch_rules_extension")
+use_repo(cuda_arch_rules, "cuda_arch_rules")
 
 # Python
 python = use_extension("@rules_python//python/extensions:python.bzl", "python")
