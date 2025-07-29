@@ -1,6 +1,7 @@
-load("@rules_cuda//cuda:defs.bzl", "cuda_binary", "cuda_library", "cuda_test")
+load("@rules_cc//cc:cc_test.bzl", "cc_library", "cc_test")
+load("//bazel:cuda_arch_rules.bzl", "cuda_binary_h100", "cuda_library_h100", "cuda_test_h100")
 
-cuda_test(
+cuda_test_h100(
     name = "build_test",
     srcs = ["build_test.cu"],
     deps = [
@@ -10,7 +11,7 @@ cuda_test(
     ],
 )
 
-cuda_binary(
+cuda_binary_h100(
     name = "tk_gmm_benchmark",
     srcs = ["tk_gmm_benchmark.cc"],
     copts = [
@@ -66,14 +67,14 @@ cc_test(
     ],
 )
 
-cuda_library(
+cuda_library_h100(
     name = "tk_gmm",
     srcs = ["tk_gmm.cu"],
     hdrs = ["tk_gmm.cuh"],
     deps = ["//third_party/thunder_kittens:kittens"],
 )
 
-cuda_test(
+cuda_test_h100(
     name = "tk_gmm_test",
     srcs = ["tk_gmm_test.cu"],
     deps = [
