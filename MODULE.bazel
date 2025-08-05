@@ -6,7 +6,7 @@ module(
 # Registry: https://registry.bazel.build/
 bazel_dep(name = "rules_python", version = "1.5.1")
 bazel_dep(name = "rules_python_gazelle_plugin", version = "1.5.1")
-bazel_dep(name = "gazelle", version = "0.44.0")
+bazel_dep(name = "gazelle", version = "0.45.0")
 bazel_dep(name = "rules_uv", version = "0.82.0")
 bazel_dep(name = "aspect_bazel_lib", version = "2.20.0")
 bazel_dep(name = "aspect_rules_py", version = "1.6.0")
