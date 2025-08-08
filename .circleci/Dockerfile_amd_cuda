@@ -1,5 +1,5 @@
 # Use ROCm base image without PyTorch
-FROM rocm/dev-ubuntu-24.04:6.4.1-complete
+FROM rocm/dev-ubuntu-24.04:6.4.3-complete
 
 # Install CUDA toolkit alongside ROCm, npm, and bazelisk
 RUN apt update && apt install -y wget && \
