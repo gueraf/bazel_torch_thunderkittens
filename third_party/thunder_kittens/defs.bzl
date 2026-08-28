@@ -5,7 +5,7 @@ def thunder_kittens_repository():
     git_repository(
         name="com_github_hazyresearch_thunderkittens",
         remote="https://github.com/HazyResearch/ThunderKittens.git",
-        commit="aaab847f430ed313ed466e64b25b9177babd1db8",
+        commit="be0e7e57e90858dfa2bbeab7296ff252755f8a37",
         build_file="//third_party/thunder_kittens:BUILD.thunder_kittens.bzl",
         patch_cmds=[
             # Rename *.impl to *.inl
